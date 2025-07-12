@@ -1,0 +1,86 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-size: 20px;
+  font-family: 'Courier New', Courier, monospace;
+  text-transform: uppercase;
+}
+
+.container {
+  background: seashell;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2em;
+  align-items: center;
+  height: 100vh;
+}
+
+h1 {
+  color: #333;
+  letter-spacing: 0.2em;
+}
+
+#game > * {
+  transition: all 0.2s ease-in-out;
+  border-radius: 50%;
+  margin: 0.5em;
+}
+
+:not(.cell) {
+  background: transparent;
+}
+
+.potato.has-valid-moves:hover {
+  background: rgb(49, 165, 153);
+}
+
+.target-valid-hover {
+  opacity: 1;
+  background: transparent !important;
+}
+
+.dragged-potato {
+  opacity: 0.2;
+}
+
+.middle-potato {
+  transform: scale(0.5);
+  opacity: 0.2;
+}
+
+.potato {
+  background: turquoise;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 4px;
+}
+
+.cell:not(.potato) {
+  background: #ccc;
+  opacity: 0.35;
+}
+
+.game-over-text {
+  color: #444;
+  padding: 1em 2em;
+  letter-spacing: 0.15em;
+  animation: fadeInPop 0.8s ease forwards;
+}
+
+@keyframes fadeInPop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
