@@ -21,7 +21,13 @@
   height: 100vh;
 }
 
-h1 {
+.instructions {
+  text-align: center;
+}
+
+.instructions > h1 {
+  text-align: center;
+  margin-bottom: 0.5em;
   color: #333;
   letter-spacing: 0.2em;
 }

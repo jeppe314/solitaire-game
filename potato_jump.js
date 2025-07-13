@@ -1,7 +1,7 @@
 const game = document.getElementById('game');
 
-const width = 600;
-const height = 600;
+const width = 500;
+const height = 500;
 
 const board = [
   [-1, -1, 1, 1, 1, -1, -1],
