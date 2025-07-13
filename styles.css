@@ -42,7 +42,7 @@ h1 {
 
 .target-valid-hover {
   opacity: 1;
-  background: transparent !important;
+  transform: scale(1.2);
 }
 
 .dragged-potato {
@@ -50,7 +50,6 @@ h1 {
 }
 
 .middle-potato {
-  transform: scale(0.5);
   opacity: 0.2;
 }
 
