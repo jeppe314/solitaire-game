@@ -20,6 +20,8 @@
   flex-direction: column;
   justify-content: center;
   gap: 2em;
+  padding: 2em;
+
   align-items: center;
   height: 100vh;
 }
@@ -33,6 +35,13 @@
   margin-bottom: 0.5em;
   color: #333;
   letter-spacing: 0.2em;
+}
+
+#game {
+  width: 90vw;
+  aspect-ratio: 1 / 1;
+  max-width: 500px;
+  max-height: 90vh;
 }
 
 #game > * {
@@ -83,6 +92,30 @@
   padding: 1em 2em;
   letter-spacing: 0.15em;
   animation: fadeInPop 0.8s ease forwards;
+}
+
+@media (max-width: 600px) {
+  :root {
+    font-size: 16px;
+  }
+
+  .container {
+    justify-content: space-around;
+  }
+
+  #game > * {
+    margin: 0.3em;
+  }
+
+  .instructions h1 {
+    font-size: 1.2rem;
+    margin-bottom: 2em;
+  }
+
+  .game-over-text {
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+  }
 }
 
 @keyframes fadeInPop {

@@ -1,7 +1,7 @@
 const game = document.getElementById('game');
 
-const width = 500;
-const height = 500;
+// const width = 500;
+// const height = 500;
 
 const board = [
   [-1, -1, 1, 1, 1, -1, -1],
@@ -284,8 +284,6 @@ async function renderBoard() {
 
   game.style.display = 'grid';
   game.style.gap = '1px';
-  game.style.width = width + 'px';
-  game.style.height = height + 'px';
   game.style.aspectRatio = `${cols} / ${rows}`;
   game.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
   game.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
