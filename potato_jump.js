@@ -193,21 +193,9 @@ function movePotato(row, col, targetRow, targetCol) {
 }
 
 function clearTempClasses() {
-  // remove target-valid class from all cells
-  document.querySelectorAll('.target-valid').forEach((el) => {
-    el.classList.remove('target-valid');
-    el.classList.remove('target-valid-hover');
-  });
-
-  // clear middle potato class
-  document.querySelectorAll('.middle-potato').forEach((el) => {
-    el.classList.remove('middle-potato');
-  });
-
-  // clear potato-selected class
-  document.querySelectorAll('.potato-selected').forEach((el) => {
-    el.classList.remove('potato-selected');
-  });
+  document
+    .querySelectorAll('.target-valid, .target-valid-hover, .middle-potato, .potato-selected')
+    .forEach((el) => el.classList.remove('target-valid', 'target-valid-hover', 'middle-potato', 'potato-selected'));
 }
 
 function getMiddlePotato(row, col, targetRow, targetCol) {
