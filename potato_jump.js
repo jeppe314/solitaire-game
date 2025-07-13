@@ -284,7 +284,6 @@ async function renderBoard() {
 
   if (!countValidMoves()) {
     await sleep(0.2);
-    console.log('adding game over text');
     addGameOverTextElement();
   }
 }
