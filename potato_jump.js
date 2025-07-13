@@ -171,97 +171,72 @@ function getMiddlePotato(row, col, targetRow, targetCol) {
 }
 
 function calcValidMoves(col, row) {
-  let validMoves = [];
-  // a potato can only move by jumping over another potato and into an empty cell, i.e. two steps, and only in the four cardinal directions
+  const moves = [];
   const directions = [
-    { dRow: -2, dCol: 0 }, // up
-    { dRow: 2, dCol: 0 }, // down
-    { dRow: 0, dCol: -2 }, // left
-    { dRow: 0, dCol: 2 }, // right
+    { dRow: -2, dCol: 0 },
+    { dRow: 2, dCol: 0 },
+    { dRow: 0, dCol: -2 },
+    { dRow: 0, dCol: 2 },
   ];
-  directions.forEach(({ dRow, dCol }) => {
+
+  for (const { dRow, dCol } of directions) {
     const newRow = parseInt(row) + dRow;
     const newCol = parseInt(col) + dCol;
     const midRow = parseInt(row) + dRow / 2;
     const midCol = parseInt(col) + dCol / 2;
 
     if (
-      newRow >= 0 &&
-      newRow < board.length &&
-      newCol >= 0 &&
-      newCol < board[0].length &&
-      midRow >= 0 &&
-      midRow < board.length &&
-      midCol >= 0 &&
-      midCol < board[0].length &&
-      board[newRow][newCol] === 0 && // target cell must be empty
-      board[midRow][midCol] === 1 // middle cell must have a potato
+      inBounds(newRow, newCol) &&
+      inBounds(midRow, midCol) &&
+      board[newRow][newCol] === 0 &&
+      board[midRow][midCol] === 1
     ) {
-      validMoves.push({ row: newRow, col: newCol });
+      moves.push({ row: newRow, col: newCol });
     }
-  });
-
-  return validMoves;
+  }
+  return moves;
 }
 
 function isValidMove(cellRow, cellCol, targetRow, targetCol) {
-  // Check if value of target cell is 0 (empty)
-  // and check if the cell in between has a potato (value 1)
   const midRow = (cellRow + targetRow) / 2;
   const midCol = (cellCol + targetCol) / 2;
   return (
-    targetRow >= 0 &&
-    targetRow < board.length &&
-    targetCol >= 0 &&
-    targetCol < board[0].length &&
-    board[targetRow][targetCol] === 0 && // target cell must be empty
-    board[midRow][midCol] === 1 // middle cell must have a potato
+    inBounds(targetRow, targetCol) &&
+    inBounds(midRow, midCol) &&
+    board[targetRow][targetCol] === 0 &&
+    board[midRow][midCol] === 1
   );
 }
 
 function potatoHasValidMoves(row, col) {
-  // Check if the potato at (row, col) has any valid moves
-  const directions = [
-    { dRow: -2, dCol: 0 }, // up
-    { dRow: 2, dCol: 0 }, // down
-    { dRow: 0, dCol: -2 }, // left
-    { dRow: 0, dCol: 2 }, // right
-  ];
-  return directions.some(({ dRow, dCol }) => {
+  return [
+    { dRow: -2, dCol: 0 },
+    { dRow: 2, dCol: 0 },
+    { dRow: 0, dCol: -2 },
+    { dRow: 0, dCol: 2 },
+  ].some(({ dRow, dCol }) => {
     const newRow = row + dRow;
     const newCol = col + dCol;
     const midRow = row + dRow / 2;
     const midCol = col + dCol / 2;
     return (
-      newRow >= 0 &&
-      newRow < board.length &&
-      newCol >= 0 &&
-      newCol < board[0].length &&
-      midRow >= 0 &&
-      midRow < board.length &&
-      midCol >= 0 &&
-      midCol < board[0].length &&
-      board[newRow][newCol] === 0 && // target cell must be empty
-      board[midRow][midCol] === 1 // middle cell must have a potato
+      inBounds(newRow, newCol) && inBounds(midRow, midCol) && board[newRow][newCol] === 0 && board[midRow][midCol] === 1
     );
   });
 }
 
 function countValidMoves() {
-  // count total amoutn of valid moves left
   let count = 0;
-  board.forEach((row, rowIndex) => {
-    row.forEach((cell, cellIndex) => {
-      if (cell === 1 && potatoHasValidMoves(rowIndex, cellIndex)) {
-        count++;
-      }
-    });
-  });
+  board.forEach((row, rowIndex) =>
+    row.forEach((cell, colIndex) => {
+      if (cell === 1 && potatoHasValidMoves(rowIndex, colIndex)) count++;
+    }),
+  );
   return count;
 }
 
 function countPotatoes() {
-  return document.querySelectorAll('.potato').length;
+  return board.flat().filter((cell) => cell === 1).length;
 }
 
 async function renderBoard() {
@@ -328,6 +303,10 @@ function addGameOverTextElement() {
 
   const container = document.querySelector('.container');
   container.appendChild(gameOverText);
+}
+
+function inBounds(row, col) {
+  return row >= 0 && row < board.length && col >= 0 && col < board[0].length;
 }
 
 function sleep(seconds) {
