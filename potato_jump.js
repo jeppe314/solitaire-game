@@ -109,24 +109,67 @@ function handleDrop(event) {
   const targetRow = parseInt(targetCell.dataset.row);
   const targetCol = parseInt(targetCell.dataset.col);
 
-  if (row === targetRow) {
-    if (targetCol < col) {
-      removePotato(targetRow, targetCol + 1);
-    } else {
-      removePotato(targetRow, targetCol - 1);
-    }
-  } else {
-    if (targetRow < row) {
-      removePotato(targetRow + 1, targetCol);
-    } else {
-      removePotato(targetRow - 1, targetCol);
-    }
-  }
-  movePotato(row, col, targetRow, targetCol);
+  performMove(row, col, targetRow, targetCol);
 
   const droppedCell = document.getElementById(id);
   droppedCell.classList.remove('potato');
 
+  renderBoard();
+}
+
+function handleCellClick(event) {
+  event.preventDefault();
+  const targetCell = event.target;
+  const { col, row } = targetCell.dataset;
+  const isPotato = targetCell.classList.contains('potato');
+
+  // If nothing is selected yet
+  if (!draggedCell) {
+    if (isPotato) {
+      const previewMoves = calcValidMoves(col, row);
+      clearTempClasses();
+
+      if (previewMoves.length > 0) {
+        draggedCell = { col: parseInt(col), row: parseInt(row), id: targetCell.id };
+        targetCell.classList.add('potato-selected');
+        previewMoves.forEach((move) => {
+          const cell = document.getElementById(`cell-${move.row}-${move.col}`);
+          if (cell) cell.classList.add('target-valid');
+        });
+      }
+    }
+    return;
+  }
+
+  // If already selected, check if clicked another potato
+  if (isPotato) {
+    const previewMoves = calcValidMoves(col, row);
+    clearTempClasses();
+
+    if (previewMoves.length > 0) {
+      // switch selection to this new potato
+      draggedCell = { col: parseInt(col), row: parseInt(row), id: targetCell.id };
+      targetCell.classList.add('potato-selected');
+      previewMoves.forEach((move) => {
+        const cell = document.getElementById(`cell-${move.row}-${move.col}`);
+        if (cell) cell.classList.add('target-valid');
+      });
+    } else {
+      // deselect everything
+      draggedCell = null;
+    }
+    return;
+  }
+
+  // otherwise, try to move to this cell
+  const targetRow = parseInt(row);
+  const targetCol = parseInt(col);
+  if (isValidMove(draggedCell.row, draggedCell.col, targetRow, targetCol)) {
+    performMove(draggedCell.row, draggedCell.col, targetRow, targetCol);
+  }
+
+  draggedCell = null;
+  clearTempClasses();
   renderBoard();
 }
 
@@ -159,6 +202,11 @@ function clearTempClasses() {
   // clear middle potato class
   document.querySelectorAll('.middle-potato').forEach((el) => {
     el.classList.remove('middle-potato');
+  });
+
+  // clear potato-selected class
+  document.querySelectorAll('.potato-selected').forEach((el) => {
+    el.classList.remove('potato-selected');
   });
 }
 
@@ -262,17 +310,18 @@ async function renderBoard() {
       cellDiv.id = `cell-${rowIndex}-${cellIndex}`;
       cellDiv.dataset.row = rowIndex;
       cellDiv.dataset.col = cellIndex;
-
       if (cell === 1) {
         cellDiv.classList.add('potato');
         cellDiv.addEventListener('dragstart', handleDragStart);
         cellDiv.addEventListener('mousedown', handleMouseDown);
         cellDiv.addEventListener('mouseup', handleMouseUp);
-        if (potatoHasValidMoves(rowIndex, cellIndex) && cellDiv.classList.contains('potato')) {
+        if (potatoHasValidMoves(rowIndex, cellIndex)) {
           cellDiv.setAttribute('draggable', 'true');
           cellDiv.classList.add('has-valid-moves');
         }
       }
+
+      cellDiv.addEventListener('click', handleCellClick);
 
       cellDiv.addEventListener('dragover', handleDragOver);
       cellDiv.addEventListener('drop', handleDrop);
@@ -286,6 +335,15 @@ async function renderBoard() {
     await sleep(0.2);
     addGameOverTextElement();
   }
+}
+
+function performMove(row, col, targetRow, targetCol) {
+  if (row === targetRow) {
+    removePotato(targetRow, targetCol < col ? targetCol + 1 : targetCol - 1);
+  } else {
+    removePotato(targetRow < row ? targetRow + 1 : targetRow - 1, targetCol);
+  }
+  movePotato(row, col, targetRow, targetCol);
 }
 
 function addGameOverTextElement() {

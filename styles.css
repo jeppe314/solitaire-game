@@ -2,6 +2,9 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 :root {
@@ -42,8 +45,14 @@
   background: transparent;
 }
 
-.potato.has-valid-moves:hover {
+.potato.has-valid-moves:hover,
+.potato.potato-selected {
   background: rgb(49, 165, 153);
+  transform: scale(1.2);
+}
+
+.target-valid:hover {
+  transform: scale(1.2);
 }
 
 .target-valid-hover {
